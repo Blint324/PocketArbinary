@@ -27,10 +27,26 @@ int valueArray[8] = {1, 2, 4, 8, 16, 32, 64, 128}; // Defines the array of value
 int value = 0;
 
 // Define functions
-int beep(int length, int freq) { // Define my awesome beeping function
-  tone(buzzer, freq); // Start beep
-  delay(length); // Wait set amount of time
-  noTone(buzzer); // Stop the beep
+int beep(int length, int freq = 0, int led = 0, int ledState = 0) { // Define my awesome beeping function
+  if (led == 0) { // If we're beeping for something OTHER than an LED
+    tone(buzzer, freq); // Start beep
+    delay(length); // Wait set amount of time
+    noTone(buzzer); // Stop the beep
+  } else { // If we ARE beeping for an LED
+    int ledBeepArray[8] = {300, 400, 500, 600, 700, 800, 900, 1000}; // The array for sounds corresponding to LEDs
+    
+    // Beeping time!
+    if (ledState == 0) { // If we're turning an LED on
+      tone(buzzer, ledBeepArray[led]); // Beep at a pitch corresponding to the LED
+      delay(length);
+      noTone(buzzer);
+    } else { // If we're turning an LED off
+      tone(buzzer, ledBeepArray[led] - 200); // Beep at a LOWER pitch because we're turning an LED off, not on.
+      delay(length);
+      noTone(buzzer);
+    }
+  }
+  
 }
 
 int checkButtons() {
@@ -41,7 +57,7 @@ int checkButtons() {
     int parsePointer = 2; // Define pointer for calculating sum of bits
     if (digitalRead(bitPointer) == LOW) { // If LED at pointer is off
       digitalWrite(bitPointer, HIGH); // Turn on LED at pointer
-      beep(100, 800);
+      beep(100, 0, bitPointer, 0); // Beep!
 
       // Parsing bits and summing them
       for (int i=0; i<=8; i++) {
@@ -58,7 +74,7 @@ int checkButtons() {
 
     } else { // If not
       digitalWrite(bitPointer, LOW); // Turn off LED at pointer
-      beep(100, 400);
+      beep(100, 0, bitPointer, 0); // Beep! Again!
       
       // Parsing bits and summing them
       for (int i=0; i<=8; i++) {
@@ -120,7 +136,7 @@ int checkPotButtons() { // Function to check the potentiometer button
       int parsePointer = 2; // Define pointer for calculating sum of bits
       if (digitalRead(analogPointer) == LOW) { // If LED at pointer is off
         digitalWrite(analogPointer, HIGH); // Turn on LED at pointer
-        beep(100, 1000);
+        beep(100, 0, analogPointer, 0); // Beep!
 
         // Parsing bits and summing them
         for (int i=0; i<=8; i++) {
@@ -136,7 +152,7 @@ int checkPotButtons() { // Function to check the potentiometer button
         delay(200);
     } else { // If not
       digitalWrite(analogPointer, LOW); // Turn off LED at pointer
-      beep(100, 300);
+      beep(100, 0, analogPointer, 1); // Beep! Again!
       
       // Parsing bits and summing them
       for (int i=0; i<=8; i++) {
