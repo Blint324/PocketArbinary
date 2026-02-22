@@ -15,6 +15,9 @@
 #define pottogglebutton 25
 #define typeswitchbutton 26
 
+// Define name to buzzer
+#define buzzer 10
+
 // Define variables
 int bitPointer = 2; // Pointer we will use to select bits
 int potentiometerValue = analogRead(A1); // Get potentiometer value
@@ -24,6 +27,12 @@ int valueArray[8] = {1, 2, 4, 8, 16, 32, 64, 128}; // Defines the array of value
 int value = 0;
 
 // Define functions
+int beep(int length, int freq) { // Define my awesome beeping function
+  tone(buzzer, freq); // Start beep
+  delay(length); // Wait set amount of time
+  noTone(buzzer); // Stop the beep
+}
+
 int checkButtons() {
   int toggleButtonState = 0;
   toggleButtonState = digitalRead(togglebutton); // Read toggle button state
@@ -32,6 +41,7 @@ int checkButtons() {
     int parsePointer = 2; // Define pointer for calculating sum of bits
     if (digitalRead(bitPointer) == LOW) { // If LED at pointer is off
       digitalWrite(bitPointer, HIGH); // Turn on LED at pointer
+      beep(100, 800);
 
       // Parsing bits and summing them
       for (int i=0; i<=8; i++) {
@@ -48,6 +58,7 @@ int checkButtons() {
 
     } else { // If not
       digitalWrite(bitPointer, LOW); // Turn off LED at pointer
+      beep(100, 400);
       
       // Parsing bits and summing them
       for (int i=0; i<=8; i++) {
@@ -71,10 +82,12 @@ int checkButtons() {
   if (nextButtonState == HIGH) { // If next bit button is on
     if (bitPointer < 9) { // If pointer is less than 9
       bitPointer += 1; // Increase pointer by 1
+      beep(100, 1000);
       delay(200);
     } else { // If not
-      analogWrite(bitPointer, 0);
+      analogWrite(bitPointer, 0); // Clear ghost effect
       bitPointer = 2; // Reset pointer
+      beep(100, 1000);
       delay(200);
     }
   }
@@ -85,10 +98,12 @@ int checkButtons() {
   if (prevButtonState == HIGH) { // If previous bit button is on
     if (bitPointer > 2) { // If pointer is greater than 2
       bitPointer -= 1; // Decrease pointer by 1
+      beep(100, 300);
       delay(200);
     } else { // If not
       analogWrite(bitPointer, 0); // Clear ghost effect
       bitPointer = 9; // Reset pointer
+      beep(100, 300);
       delay(200);
     }
   }
@@ -105,6 +120,7 @@ int checkPotButtons() { // Function to check the potentiometer button
       int parsePointer = 2; // Define pointer for calculating sum of bits
       if (digitalRead(analogPointer) == LOW) { // If LED at pointer is off
         digitalWrite(analogPointer, HIGH); // Turn on LED at pointer
+        beep(100, 1000);
 
         // Parsing bits and summing them
         for (int i=0; i<=8; i++) {
@@ -120,6 +136,7 @@ int checkPotButtons() { // Function to check the potentiometer button
         delay(200);
     } else { // If not
       digitalWrite(analogPointer, LOW); // Turn off LED at pointer
+      beep(100, 300);
       
       // Parsing bits and summing them
       for (int i=0; i<=8; i++) {
@@ -143,9 +160,11 @@ int checkPotButtons() { // Function to check the potentiometer button
   if (typeSwitchButtonState == HIGH) {
     if (usageType == 0) {
       usageType = 1;
+      beep(100, 900);
       delay(200);
     } else {
       usageType = 0;
+      beep(100, 500);
       delay(200);
     }
   }
@@ -171,10 +190,11 @@ void setup() {
   for (int i=2; i<=9; i++) {
     digitalWrite(i, LOW);
   }
-  
 }
 
 void loop() {
+  int lastAnalogPointer;
+
   potentiometerValue = analogRead(A1); // Get potentiometer value
   analogPointer = round(potentiometerValue / 145 + 2); // Convert the potentiometer range into an integer from 0 to 7
 
@@ -192,12 +212,11 @@ void loop() {
       delay(40);
     }
   } else {
-    if (digitalRead(analogPointer) == LOW) { // Ghost effect... BUT WITH A POTENTIOMETER!!!!!!!
+    if (digitalRead(analogPointer) == LOW) { // Ghost effect... BUT WITH A POTENTIOMETER!!!!!!!      
       analogWrite(analogPointer, 1);
       delay(40);
       analogWrite(analogPointer, 0);
-      delay(40);
-    }
+      delay(40); 
+    } 
   }
-
 }
