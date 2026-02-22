@@ -21,7 +21,8 @@
 // Define variables
 int bitPointer = 2; // Pointer we will use to select bits
 int potentiometerValue = analogRead(A1); // Get potentiometer value
-int analogPointer = round(potentiometerValue / 140 + 2); // Convert the potentiometer range into an integer from 2 to 9
+int potDivideAmount = 130; // The amount which we will be dividing in the analogPointer calculation mechanism.
+int analogPointer = round(potentiometerValue / potDivideAmount + 2); // Convert the potentiometer range into an integer from 2 to 9
 int usageType = 0; // Whether you're using the potentiometer to select LEDs, or the buttons to select LEDs. 0 and 1 respectively.
 int valueArray[8] = {128, 64, 32, 16, 8, 4, 2, 1}; // Defines the array of values assigned to each led
 int value = 0;
@@ -222,10 +223,8 @@ void setup() {
 }
 
 void loop() {
-  int lastAnalogPointer;
-
   potentiometerValue = analogRead(A1); // Get potentiometer value
-  analogPointer = round(potentiometerValue / 145 + 2); // Convert the potentiometer range into an integer from 0 to 7
+  analogPointer = round(potentiometerValue / potDivideAmount + 2); // Convert the potentiometer range into an integer from 0 to 7
 
   checkPotButtons();
 
