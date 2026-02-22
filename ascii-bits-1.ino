@@ -21,9 +21,9 @@
 // Define variables
 int bitPointer = 2; // Pointer we will use to select bits
 int potentiometerValue = analogRead(A1); // Get potentiometer value
-int analogPointer = round(potentiometerValue / 145 + 2); // Convert the potentiometer range into an integer from 2 to 9
+int analogPointer = round(potentiometerValue / 140 + 2); // Convert the potentiometer range into an integer from 2 to 9
 int usageType = 0; // Whether you're using the potentiometer to select LEDs, or the buttons to select LEDs. 0 and 1 respectively.
-int valueArray[8] = {1, 2, 4, 8, 16, 32, 64, 128}; // Defines the array of values assigned to each led
+int valueArray[8] = {128, 64, 32, 16, 8, 4, 2, 1}; // Defines the array of values assigned to each led
 int value = 0;
 
 // Define functions
@@ -33,23 +33,36 @@ int beep(int length, int freq = 0, int led = 0, int ledState = 0) { // Define my
     delay(length); // Wait set amount of time
     noTone(buzzer); // Stop the beep
   } else { // If we ARE beeping for an LED
-    int ledBeepArray[8] = {300, 400, 500, 600, 700, 800, 900, 1000}; // The array for sounds corresponding to LEDs
+      int ledBeepArray[8] = {100, 1000, 900, 800, 700, 600, 500, 400}; // The array for sounds corresponding to LEDs
     
-    // Beeping time!
-    if (ledState == 0) { // If we're turning an LED on
-      tone(buzzer, ledBeepArray[led]); // Beep at a pitch corresponding to the LED
-      delay(length);
-      noTone(buzzer);
-    } else { // If we're turning an LED off
-      tone(buzzer, ledBeepArray[led] - 200); // Beep at a LOWER pitch because we're turning an LED off, not on.
-      delay(length);
-      noTone(buzzer);
+      // Beeping time!
+      if (ledState == 0) { // If we're turning an LED on
+        if (led == 8) { // Bandage fix... There's a problem with the increasing pitch and this is the only solution I could come up with.
+          tone(buzzer, 300);
+          delay(length);
+          noTone(buzzer);
+        } else {
+          tone(buzzer, ledBeepArray[led]); // Beep at a pitch corresponding to the LED
+          delay(length);
+          noTone(buzzer);
+        }
+
+      } else { // If we're turning an LED off
+        if (led == 8) { // Bandage fix yet again.
+          tone(buzzer, 100);
+          delay(length);
+          noTone(buzzer);
+        } else {
+            tone(buzzer, ledBeepArray[led] - 200); // Beep at a pitch corresponding to the LED.. BUT LOWER!!!!!
+            delay(length);
+            noTone(buzzer);
+      }
     }
   }
-  
 }
 
 int checkButtons() {
+  
   int toggleButtonState = 0;
   toggleButtonState = digitalRead(togglebutton); // Read toggle button state
   
@@ -57,7 +70,7 @@ int checkButtons() {
     int parsePointer = 2; // Define pointer for calculating sum of bits
     if (digitalRead(bitPointer) == LOW) { // If LED at pointer is off
       digitalWrite(bitPointer, HIGH); // Turn on LED at pointer
-      beep(100, 0, bitPointer, 0); // Beep!
+      beep(100, 0, bitPointer - 1, 0); // Beep!
 
       // Parsing bits and summing them
       for (int i=0; i<=8; i++) {
@@ -74,7 +87,7 @@ int checkButtons() {
 
     } else { // If not
       digitalWrite(bitPointer, LOW); // Turn off LED at pointer
-      beep(100, 0, bitPointer, 0); // Beep! Again!
+      beep(100, 0, bitPointer - 1, 0); // Beep! Again!
       
       // Parsing bits and summing them
       for (int i=0; i<=8; i++) {
@@ -136,7 +149,7 @@ int checkPotButtons() { // Function to check the potentiometer button
       int parsePointer = 2; // Define pointer for calculating sum of bits
       if (digitalRead(analogPointer) == LOW) { // If LED at pointer is off
         digitalWrite(analogPointer, HIGH); // Turn on LED at pointer
-        beep(100, 0, analogPointer, 0); // Beep!
+        beep(100, 0, analogPointer - 1, 0); // Beep!
 
         // Parsing bits and summing them
         for (int i=0; i<=8; i++) {
@@ -152,7 +165,7 @@ int checkPotButtons() { // Function to check the potentiometer button
         delay(200);
     } else { // If not
       digitalWrite(analogPointer, LOW); // Turn off LED at pointer
-      beep(100, 0, analogPointer, 1); // Beep! Again!
+      beep(100, 0, analogPointer - 1, 1); // Beep! Again!
       
       // Parsing bits and summing them
       for (int i=0; i<=8; i++) {
