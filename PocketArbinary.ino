@@ -20,12 +20,14 @@
 
 // Define variables
 int bitPointer = 2; // Pointer we will use to select bits
-int potentiometerValue = analogRead(A1); // Get potentiometer value
-int potDivideAmount = 130; // The amount which we will be dividing in the analogPointer calculation mechanism.
-int analogPointer = round(potentiometerValue / potDivideAmount + 2); // Convert the potentiometer range into an integer from 2 to 9
+int potentiometerValue; // Define potentiometer value, the direct analog output of our potentiometer
+int analogPointer; /* Define the mapped pointer, derived from the potentiomer value.
+We will use this variable in the main loop, using the built in 'map' function, to convert the direct potentiometer value (0-1023)
+to a value to input into our pointer mechanisms (2-9) (The LED pins, as seen in the first few lines.)
+*/
 int usageType = 0; // Whether you're using the potentiometer to select LEDs, or the buttons to select LEDs. 0 and 1 respectively.
-int valueArray[8] = {128, 64, 32, 16, 8, 4, 2, 1}; // Defines the array of values assigned to each led
-int value = 0;
+int valueArray[8] = {128, 64, 32, 16, 8, 4, 2, 1}; // Defines the array of values assigned to each LED.
+int value; // Define the total value of all of our calculations, as you will see in the checkButtons and checkPotButtons functions.
 
 // Define functions
 int beep(int length, int freq = 0, int led = 0, int ledState = 0) { // Define my awesome beeping function
@@ -203,28 +205,12 @@ int checkPotButtons() { // Function to check the potentiometer button
 void setup() {
   // Start serial communication with PC
   Serial.begin(9600);
-
-  // Define all bit LEDs as output
-  for (int i=2; i<=9; i++) {
-    pinMode(i, OUTPUT);
-  }
-
-  // Define all buttons as input
-  pinMode(22, INPUT);
-  pinMode(23, INPUT);
-  pinMode(24, INPUT);
-  pinMode(25, INPUT);
-  pinMode(26, INPUT);
-  
-  // Turn all LEDs off
-  for (int i=2; i<=9; i++) {
-    digitalWrite(i, LOW);
-  }
 }
 
 void loop() {
   potentiometerValue = analogRead(A1); // Get potentiometer value
-  analogPointer = round(potentiometerValue / potDivideAmount + 2); // Convert the potentiometer range into an integer from 0 to 7
+  analogPointer = map(potentiometerValue, 0, 1015, 2, 9); /* Convert the potentiometer range into an integer from 2 to 9. The reason the third variable (maximum potentiometer rotation) is 1015 instead of the
+  standard 1023 that most potentiometers cap out at, is because some people have semi-malfunctioning potentiometers that only go up to 1015-ish. So there's wiggle room. */
 
   checkPotButtons();
 
