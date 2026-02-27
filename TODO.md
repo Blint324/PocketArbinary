@@ -6,4 +6,4 @@ Nothing!
 ### In progress
 Nothing!
 ### Done
-[ x ] Fix beeping properly, not just with a bandage fix. ~3d #improvement @Blint324 2026-02-26  
+- [x] Fix beeping properly, not just with a bandage fix. ~3d #improvement @Blint324 2026-02-26  
