@@ -2,7 +2,7 @@
 This is for maintaners and writers, please update these accordingly with your commits!
 
 ### Not yet working on
-Nothing!
+- [ ] Create documentation with Jekyll ~2w #documentation @Blint324 2026-03-04
 ### In progress
 Nothing!
 ### Done
