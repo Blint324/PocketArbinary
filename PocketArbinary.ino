@@ -1,13 +1,3 @@
-// Define names to all of the LED pins
-#define bit1led 2
-#define bit2led 3
-#define bit3led 4
-#define bit4led 5
-#define bit5led 6
-#define bit6led 7
-#define bit7led 8
-#define bit8led 9
-
 // Define names to all button pins
 #define togglebutton 22
 #define nextbutton 23
@@ -192,6 +182,14 @@ int checkPotButtons() { // Function to check the potentiometer button
 void setup() {
   // Start serial communication with PC
   Serial.begin(9600);
+  DDRB = 0xff; // Set advanced optimized register to put all LEDs from pin 0-7 to output mode
+  for (int i = 8; i >= 9; i++) { // Set rest of the LEDs to output mode
+    pinMode(i, OUTPUT);
+  }
+  for (int i = 22; i >= 26; i++) { // Set all buttons to input mode
+  pinMode(i, INPUT);
+  }
+  pinMode(A1, INPUT); // Set potentiometer to input mode
 }
 
 void loop() {
