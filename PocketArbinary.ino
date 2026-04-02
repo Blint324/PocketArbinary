@@ -24,18 +24,18 @@ You should have received a copy of the GNU General Public License along with thi
 #define buzzer 10
 
 // Define variables
-int bitPointer = 2; // Pointer we will use to select bits
-int potentiometerValue; // Define potentiometer value, the direct analog output of our potentiometer
-int analogPointer; /* Define the mapped pointer, derived from the potentiomer value.
+unsigned int bitPointer = 2; // Pointer we will use to select bits
+unsigned int potentiometerValue; // Define potentiometer value, the direct analog output of our potentiometer
+unsigned int analogPointer; /* Define the mapped pointer, derived from the potentiomer value.
 We will use this variable in the main loop, using the built in 'map' function, to convert the direct potentiometer value (0-1023)
 to a value to input into our pointer mechanisms (2-9) (The LED pins, as seen in the first few lines.)
 */
-int usageType = 0; // Whether you're using the potentiometer to select LEDs, or the buttons to select LEDs. 0 and 1 respectively.
-int valueArray[8] = {128, 64, 32, 16, 8, 4, 2, 1}; // Defines the array of values assigned to each LED.
-int value; // Define the total value of all of our calculations, as you will see in the checkButtons and checkPotButtons functions.
+unsigned int usageType = 0; // Whether you're using the potentiometer to select LEDs, or the buttons to select LEDs. 0 and 1 respectively.
+unsigned int valueArray[8] = {128, 64, 32, 16, 8, 4, 2, 1}; // Defines the array of values assigned to each LED.
+unsigned int value; // Define the total value of all of our calculations, as you will see in the checkButtons and checkPotButtons functions.
 
 // Define functions
-int beep(int length, int freq = 0, int led = 0, int ledState = 0) { // Define my awesome beeping function
+int beep(unsigned int length, unsigned int freq = 0, unsigned int led = 0, unsigned int ledState = 0) { // Define my awesome beeping function
   if (led == -1) { // If we're beeping for something OTHER than an LED
     tone(buzzer, freq); // Start beep
     delay(length); // Wait set amount of time
@@ -58,11 +58,11 @@ int beep(int length, int freq = 0, int led = 0, int ledState = 0) { // Define my
 
 int checkButtons() {
   
-  int toggleButtonState = 0;
+  unsigned int toggleButtonState = 0;
   toggleButtonState = digitalRead(togglebutton); // Read toggle button state
   
   if (toggleButtonState == HIGH) { // If toggle button is on
-    int parsePointer = 2; // Define pointer for calculating sum of bits
+    unsigned int parsePointer = 2; // Define pointer for calculating sum of bits
     if (digitalRead(bitPointer) == LOW) { // If LED at pointer is off
       digitalWrite(bitPointer, HIGH); // Turn on LED at pointer
       beep(100, 0, bitPointer - 2, 0); // Beep!
@@ -100,7 +100,7 @@ int checkButtons() {
     }
   }
   
-  int nextButtonState = 0;
+  unsigned int nextButtonState = 0;
   nextButtonState = digitalRead(nextbutton); // Read next bit button state
 
   if (nextButtonState == HIGH) { // If next bit button is on
@@ -116,7 +116,7 @@ int checkButtons() {
     }
   }
   
-  int prevButtonState = 0;
+  unsigned int prevButtonState = 0;
   prevButtonState = digitalRead(prevbutton); // Read previous bit button state
 
   if (prevButtonState == HIGH) { // If previous bit button is on
@@ -134,7 +134,7 @@ int checkButtons() {
 }
 
 int checkPotButtons() { // Function to check the potentiometer button
-  int potToggleButtonState = digitalRead(pottogglebutton); // Define state for the potentiometers toggle button as... well... I dont have to say it, right?
+  unsigned int potToggleButtonState = digitalRead(pottogglebutton); // Define state for the potentiometers toggle button as... well... I dont have to say it, right?
 
   if (potToggleButtonState == HIGH) { // Dude, you read the last function. I'm sure you did. I don't have to explain.
     if (usageType == 1) { // If we're using the potentiometer mode
@@ -179,7 +179,7 @@ int checkPotButtons() { // Function to check the potentiometer button
   }
 
   // Onto the usage type switch button now!
-  int typeSwitchButtonState = digitalRead(typeswitchbutton);
+  unsigned int typeSwitchButtonState = digitalRead(typeswitchbutton);
 
   if (typeSwitchButtonState == HIGH) {
     if (usageType == 0) {
